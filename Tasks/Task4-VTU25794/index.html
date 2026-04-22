@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Order Management</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<h1>Order Management System</h1>
+
+<button onclick="loadOrders()">Load Orders</button>
+<button onclick="highestOrder()">Highest Order</button>
+<button onclick="topCustomer()">Top Customer</button>
+
+<div id="output"></div>
+
+<script>
+async function loadOrders(){
+    const res = await fetch("/orders");
+    const data = await res.json();
+
+    let html = "<h3>Orders</h3>";
+    data.forEach(o => {
+        html += `<p>${o.name} bought ${o.product_name} (${o.quantity}) = ₹${o.total}</p>`;
+    });
+    output.innerHTML = html;
+}
+
+async function highestOrder(){
+    const res = await fetch("/highest-order");
+    const d = await res.json();
+
+    output.innerHTML =
+        `<h3>Highest Order</h3>
+        <p>${d.name} spent ₹${d.total}</p>`;
+}
+
+async function topCustomer(){
+    const res = await fetch("/top-customer");
+    const d = await res.json();
+
+    output.innerHTML =
+        `<h3>Top Customer</h3>
+        <p>${d.name} (${d.total_orders} orders)</p>`;
+}
+</script>
+
+</body>
+</html>
