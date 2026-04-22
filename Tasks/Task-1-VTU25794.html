@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Student Registration Form</title>
+        <style>
+            body{
+                font-family: Arial, sans-serif;
+                margin:0;
+                background:#f4f4f4;
+            }
+            header{
+                background:linear-gradient(-45deg,lightblue,pink);
+                color:purple;
+                padding:10px 20px;
+                display:flex;
+                justify-content:space-between;
+                align-items:center;
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            }
+            button{
+                font-family: cursive;
+                padding: 10px 30px;
+                border: none;
+                background:lightskyblue;
+                color: darkblue;
+                font-size: 18px;
+                border-radius: 10px;
+                cursor: pointer;
+            }
+            .c1{
+                background:  lightcyan;
+                font-weight: bold;
+            }
+            nav ul{
+                list-style:none;
+                display:flex;
+                gap:15px;
+                padding:0;
+                margin:10px 0 0 0;
+            }
+            nav a{
+                font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+                color:blueviolet;
+                text-decoration:none;
+            }
+            #sidebarlayout{
+                display:flex;
+                min-height:60vh;
+            }
+            aside{
+                width:250px;
+                background:lightcyan;
+                padding:20px;
+                border-right:1px solid #ccc;
+            }
+            main{
+                flex:1;
+                padding:20px;
+                background:rgb(237, 251, 157);
+                align-items: center;
+                font-family: cursive;
+                justify-content: center;
+            }
+        </style>
+    </head>
+    <body>
+        <header>
+            <h1>Student Registration Form</h1>
+            <nav>
+                <ul>
+                    <li><a href="formbasics.html">Home</a></li>
+                    <li><a href="basics.html">About</a></li>
+                    <li><a href="simplepage.html">Contact</a></li>
+                </ul>
+            </nav>
+            <div style="display:flex; align-items:center; gap:10px;">
+                <div id="time"></div>
+                <img src="media/dragonlogo.png" alt="Logo" style="height:40px;">
+            </div>
+
+           <script>
+                function updateTime() {
+                    const now = new Date();
+                    const timeString = now.toLocaleTimeString();
+                    document.getElementById('time').textContent = timeString;
+                }
+                setInterval(updateTime, 1000);
+                updateTime();
+            </script>
+        </header>
+        
+        <div id="sidebarlayout">
+            <aside>
+                <h2 style="color:deeppink;font-family: serif;">Navigation</h2>
+                <nav>
+                    <ul>
+                        <li><a href="admission.html">Admission</a></li>
+                        <li><a href="passport.html">Passport</a></li>
+                        <li><a href="studentdetails.html">Student Details</a></li>
+                    </ul>
+            </aside>
+        <main>
+            <section id="section1">
+                <h2>Personal Information</h2>
+                <form>
+                    <label for="fname">First Name:</label>
+                    <input class="c1" type="text" id="fname" name="fname" placeholder="Enter first name"><br><br>
+                    <label for="lname">Last Name:</label>
+                    <input class="c1" type="text" id="lname" name="lname" placeholder="Enter last name">
+                    <br><br>
+                    <label for="email">Email:</label>
+                    <input class="c1" type="email" id="email" name="email" placeholder="Enter email"><br><br>
+                    <label for="gender">Gender:</label>
+                    <input class="c1" type="radio" id="male" name="gender" value="male">
+                    <label for="male">Male</label>
+                    <input class="c1" type="radio" id="female" name="gender" value="female">
+                    <label for="female">Female</label>
+                    <br><br>
+                    <label for="dob">Date of Birth:</label><br>
+                    <input class="c1" type="date" id="dob" name="dob"><br><br>
+                    <label for="department">Department:</label><br>
+                    <select class="c1" id="department" name="department">
+                        <option value="">Select Department</option>
+                        <option value="CSE">CSE</option>
+                        <option value="AIML">AIML</option>
+                        <option value="IT">IT</option>
+                        <option value="Ai&DS">Ai&DS</option>
+                        <option value="CS">CS</option>
+                    </select><br><br>
+                    <label for="interests">Interested Area:</label><br>
+                    <select class="c1" id="interests" name="interests">
+                        <option value="">Select an option</option>
+                        <option value="FSD">Full Stack Development</option>
+                        <option value="AI">Artificial Intelligence</option>
+                        <option value="ML">Machine Learning</option>
+                        <option value="DS">Data Science</option>
+                    </select><br><br>
+                    <label for="pass">Password:</label>
+                    <input class="c1" type="password" id="pass" name="pass" placeholder="Enter password"><br><br>
+                    <label for="cpass">Confirm Password:</label>
+                    <input class="c1" type="password" id="cpass" name="cpass" placeholder="Confirm password"><br><br>
+                    <button type="submit" onclick="Submit()">Submit</button>
+                </form>
+            </section>
+        </main>
+        </div>
+        <script>
+            window.Submit=()=>{
+                const fname = document.getElementById('fname').value;
+                const lname = document.getElementById('lname').value;
+                const email = document.getElementById('email').value;
+                const pass = document.getElementById('pass').value;
+                const cpass = document.getElementById('cpass').value;
+                if(fname===""){
+                    alert("First name is required!");
+                    return;
+                }
+                if(email===""){
+                    alert("Email is required!");
+                    return;
+                }
+                if(pass===""||cpass===""){
+                    alert("Password is required!");
+                    return;
+                }
+                if(!email.includes('@') || !email.includes('.')){
+                    alert("Please enter a valid email address!");
+                    return;
+                }
+                if(pass.length < 6){
+                    alert("Password must be at least 6 characters long!");
+                    return;
+                }   
+                if(pass !== cpass){
+                    alert("Passwords do not match!");
+                    return;
+                }
+                alert(`Registration Successful!`);
+            }
+        </script>
+    </body>
+</html>

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>keyboard curser</title>
+    </head>
+    <body>
+        <div class="game-area">
+            <div id="Player"></div>
+        <script>
+            let posx=100;
+	        let posy=100;
+	        const step=20; //for pixel movement
+	        const player=document.getElementById('Player');
+            player.style.left = posx + "px";
+            player.style.top = posy + "px";
+	        /* global keyword listener*/
+	        globalThis.addEventListener('keydown',(event)=>{
+                const key=event.key;
+                if(key==='ArrowUp') {
+                    posy-=step;
+                }
+                if(key==='ArrowDown') {
+                    posy+=step;
+                }
+                if(key==='ArrowLeft') {
+                     posx-=step;
+                 }
+                 if(key==='ArrowRight') {
+                    posx+=step;
+                }
+                /* update DOM*/
+                player.style.top=posy+'px';
+                player.style.left=posx+'px';
+            });
+        </script>
+        <style>
+            #Player{
+		        width:50px;
+		        height:50px;
+		        background-color:#ff5733;
+		        border-radius:50%;
+		        position:absolute; /*required for top/left movement*/
+                transition: 0.1s; /*smooth movement*/
+	        }
+        </style>
+    </body>
+</html>

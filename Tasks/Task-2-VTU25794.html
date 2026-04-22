@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Data Retrieval & Sorting Dashboard</title>
+</head>
+
+<body>
+
+<h2>Student Dashboard</h2>
+
+<label>Filter by Department:</label>
+<select id="deptFilter" onchange="filterDept()">
+<option value="All">All</option>
+<option value="CSE">CSE</option>
+<option value="ECE">ECE</option>
+<option value="EEE">EEE</option>
+<option value="IT">IT</option>
+</select>
+
+<br><br>
+
+<button onclick="sortByName()">Sort by Name</button>
+<button onclick="sortByDate()">Sort by Date</button>
+
+<h3>Department Count</h3>
+<div id="count"></div>
+
+<h3>Student Records</h3>
+
+<table border="1" cellpadding="5">
+<thead>
+<tr>
+<th>Name</th>
+<th>Department</th>
+<th>Joining Date</th>
+</tr>
+</thead>
+
+<tbody id="tableBody"></tbody>
+</table>
+
+<script>
+
+let students = [
+{name:"Anruth", dept:"CSE", date:"2023-06-10"},
+{name:"Kiran", dept:"ECE", date:"2022-07-21"},
+{name:"Rahul", dept:"EEE", date:"2023-01-15"},
+{name:"Meena", dept:"CSE", date:"2022-11-05"},
+{name:"Divya", dept:"IT", date:"2023-02-18"},
+{name:"Arjun", dept:"ECE", date:"2023-03-20"}
+];
+
+let filtered = [...students];
+
+function display(data){
+let table = document.getElementById("tableBody");
+table.innerHTML="";
+
+data.forEach(s=>{
+let row = `<tr>
+<td>${s.name}</td>
+<td>${s.dept}</td>
+<td>${s.date}</td>
+</tr>`;
+table.innerHTML += row;
+});
+
+countDept(data);
+}
+
+function sortByName(){
+filtered.sort((a,b)=>a.name.localeCompare(b.name));
+display(filtered);
+}
+
+function sortByDate(){
+filtered.sort((a,b)=>new Date(a.date)-new Date(b.date));
+display(filtered);
+}
+
+function filterDept(){
+let dept = document.getElementById("deptFilter").value;
+
+if(dept==="All"){
+filtered=[...students];
+}
+else{
+filtered = students.filter(s=>s.dept===dept);
+}
+
+display(filtered);
+}
+
+function countDept(data){
+let counts = {};
+
+data.forEach(s=>{
+counts[s.dept] = (counts[s.dept] || 0) + 1;
+});
+
+let result="";
+for(let d in counts){
+result += d + " : " + counts[d] + "<br>";
+}
+
+document.getElementById("count").innerHTML=result;
+}
+
+display(filtered);
+
+</script>
+
+</body>
+</html>
