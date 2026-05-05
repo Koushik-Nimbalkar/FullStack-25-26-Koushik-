@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>Employer dashboard — Job Portal</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+</head>
+<body>
+<header th:replace="~{fragments :: siteHeader}"></header>
+<main>
+    <h1 th:text="${user.companyName != null ? user.companyName : user.fullName}">Company</h1>
+    <p class="muted">Post roles, review applicants, and shortlist candidates.</p>
+
+    <div class="alert alert--success" th:if="${param.created != null}">Job posted.</div>
+    <div class="alert alert--success" th:if="${param.updated != null}">Job updated.</div>
+    <div class="alert alert--success" th:if="${message != null}" th:text="${message}"></div>
+    <div class="alert alert--error" th:if="${error != null}" th:text="${error}"></div>
+
+    <div class="stats">
+        <div class="stat">
+            <strong th:text="${jobCount}">0</strong>
+            <span class="muted">Active listings</span>
+        </div>
+        <div class="stat">
+            <strong th:text="${applicationCount}">0</strong>
+            <span class="muted">Total applications</span>
+        </div>
+        <div class="stat">
+            <strong th:text="${shortlistCount}">0</strong>
+            <span class="muted">Shortlisted</span>
+        </div>
+    </div>
+
+    <p>
+        <a class="btn btn--primary" th:href="@{/employer/jobs/new}">Post a new job</a>
+        <a class="btn btn--ghost" th:href="@{/employer/profile}">Company profile</a>
+    </p>
+
+    <div class="card" style="overflow-x:auto;">
+        <h2 style="margin-top:0;">Your listings</h2>
+        <table th:if="${!jobs.isEmpty()}">
+            <thead>
+            <tr>
+                <th>Title</th>
+                <th>Location</th>
+                <th>Salary (annual)</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="job : ${jobs}">
+                <td th:text="${job.title}">Title</td>
+                <td th:text="${job.location}">City</td>
+                <td th:text="${T(com.jobportal.util.SalaryFormat).formatRange(job.salaryMin, job.salaryMax)}">$</td>
+                <td>
+                    <a th:href="@{/employer/jobs/{id}/applications(id=${job.id})}">Applicants</a>
+                    ·
+                    <a th:href="@{/employer/jobs/{id}/edit(id=${job.id})}">Edit</a>
+                    ·
+                    <form th:action="@{/employer/jobs/{id}/delete(id=${job.id})}" method="post" style="display:inline;">
+                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                        <button type="submit" class="btn btn--small btn--danger" onclick="return confirm('Remove this job from listings?');">Delete</button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <p th:if="${jobs.isEmpty()}" class="muted">No jobs yet. Post your first opening.</p>
+    </div>
+</main>
+<footer th:replace="~{fragments :: siteFooter}"></footer>
+</body>
+</html>

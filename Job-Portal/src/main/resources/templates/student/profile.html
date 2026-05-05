@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>Profile — Job Portal</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+</head>
+<body>
+<header th:replace="~{fragments :: siteHeader}"></header>
+<main>
+    <h1>Your profile</h1>
+    <div class="alert alert--success" th:if="${param.saved != null}">Profile saved.</div>
+    <div class="alert alert--success" th:if="${message != null}" th:text="${message}"></div>
+    <div class="alert alert--error" th:if="${error != null}" th:text="${error}"></div>
+
+    <div class="card" style="margin-bottom:1.5rem;">
+        <h2>Contact</h2>
+        <form th:action="@{/student/profile}" th:object="${profileForm}" method="post">
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+            <div class="form-group">
+                <label for="fullName">Full name</label>
+                <input id="fullName" th:field="*{fullName}" placeholder="Enter ur name" required/>
+                <span class="error" th:if="${#fields.hasErrors('fullName')}" th:errors="*{fullName}"></span>
+            </div>
+            <div class="form-group">
+                <label for="phone">Mobile</label>
+                <input id="phone" th:field="*{phone}"/>
+            </div>
+            <button class="btn btn--primary" type="submit">Save</button>
+        </form>
+        <p class="muted" style="margin-top:1rem;">Email: <span th:text="${user.email}">email</span></p>
+    </div>
+
+    <div class="card">
+        <h2>Resume</h2>
+        <p th:if="${user.resumePath != null}" class="muted">
+            Current file on record. Upload a new PDF or Word file to replace it.
+        </p>
+        <p th:if="${user.resumePath == null}" class="muted">No resume yet — upload PDF or Word (.doc, .docx) to apply.</p>
+        <form th:action="@{/student/resume}" method="post" enctype="multipart/form-data">
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+            <div class="form-group">
+                <label for="file">Choose file</label>
+                <input id="file" name="file" type="file" accept=".pdf,.doc,.docx" required/>
+            </div>
+            <button class="btn btn--primary" type="submit">Upload resume</button>
+        </form>
+    </div>
+</main>
+<footer th:replace="~{fragments :: siteFooter}"></footer>
+</body>
+</html>

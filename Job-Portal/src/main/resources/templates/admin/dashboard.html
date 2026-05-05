@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>Admin — Job Portal</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+</head>
+<body>
+<header th:replace="~{fragments :: siteHeader}"></header>
+<main>
+    <h1>Admin overview</h1>
+    <p class="muted">High-level counts (demo).</p>
+    <div class="stats">
+        <div class="stat">
+            <strong th:text="${userCount}">0</strong>
+            <span class="muted">Registered users</span>
+        </div>
+        <div class="stat">
+            <strong th:text="${jobCount}">0</strong>
+            <span class="muted">Job records</span>
+        </div>
+        <div class="stat">
+            <strong th:text="${applicationCount}">0</strong>
+            <span class="muted">Applications</span>
+        </div>
+    </div>
+    <p class="muted">Admins may also use employer tools to post jobs.</p>
+</main>
+<footer th:replace="~{fragments :: siteFooter}"></footer>
+</body>
+</html>

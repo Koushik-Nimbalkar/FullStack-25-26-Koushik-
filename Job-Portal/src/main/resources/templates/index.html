@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>Job Portal</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+</head>
+<body>
+<header th:replace="~{fragments :: siteHeader}"></header>
+<main>
+    <section class="hero">
+        <h1>Find your next role</h1>
+        <p>Search jobs by location, category, and experience. Salaries shown as annual ranges.</p>
+    </section>
+    <h2 style="margin-bottom:1rem;">Latest openings</h2>
+    <div class="grid grid--2">
+        <article class="card" th:each="job : ${jobs}">
+            <h3><a th:href="@{/jobs/{id}(id=${job.id})}" th:text="${job.title}">Title</a></h3>
+            <p class="muted" th:text="${job.employer.companyName != null ? job.employer.companyName : job.employer.fullName}">
+                Company</p>
+            <p class="job-meta">
+                <span th:text="${job.location}">City</span>
+                ·
+                <span th:text="${T(com.jobportal.util.SalaryFormat).formatRange(job.salaryMin, job.salaryMax)}">$</span>
+                ·
+                <span th:text="${job.minExperienceYears} + ' yr min'">0 yr</span>
+            </p>
+        </article>
+    </div>
+    <p style="margin-top:1.5rem;">
+        <a class="btn btn--primary" th:href="@{/jobs}">View all jobs</a>
+    </p>
+</main>
+<footer th:replace="~{fragments :: siteFooter}"></footer>
+</body>
+</html>

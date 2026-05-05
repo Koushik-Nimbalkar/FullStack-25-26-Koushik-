@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>Student dashboard — Job Portal</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+</head>
+<body>
+<header th:replace="~{fragments :: siteHeader}"></header>
+<main>
+    <h1 th:text="'Hello, ' + ${user.fullName}">Hello</h1>
+    <p class="muted">Track applications and shortlist notifications (when an employer shortlists you).</p>
+
+    <div class="alert alert--success" th:if="${message != null}" th:text="${message}"></div>
+
+    <div class="card" style="margin-bottom:1.5rem;" th:if="${!shortlisted.isEmpty()}">
+        <h2>Shortlist notifications</h2>
+        <p class="muted">Congratulations — these employers shortlisted your profile.</p>
+        <ul>
+            <li th:each="a : ${shortlisted}">
+                <strong th:text="${a.job.title}">Job</strong>
+                —
+                <span th:text="${a.job.employer.companyName != null ? a.job.employer.companyName : a.job.employer.fullName}">Co</span>
+                (<span th:text="${a.job.location}">city</span>)
+            </li>
+        </ul>
+    </div>
+
+    <div class="card">
+        <h2>Recent applications</h2>
+        <table th:if="${!applications.isEmpty()}">
+            <thead>
+            <tr>
+                <th>Job</th>
+                <th>Company</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="a : ${applications}">
+                <td><a th:href="@{/jobs/{id}(id=${a.job.id})}" th:text="${a.job.title}">Job</a></td>
+                <td th:text="${a.job.employer.companyName != null ? a.job.employer.companyName : a.job.employer.fullName}">
+                    Co
+                </td>
+                <td>
+                    <span class="badge"
+                          th:classappend="${a.status.name() == 'PENDING'} ? ' badge--pending' : (${a.status.name() == 'SHORTLISTED'} ? ' badge--shortlist' : ' badge--reject')"
+                          th:text="${a.status.name()}">PENDING</span>
+                </td>
+                <td>
+                    <form th:action="@{/student/applications/{id}/withdraw(id=${a.id})}" method="post" style="display:inline;" onsubmit="return confirm('Are you sure you want to withdraw this application?');">
+                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                        <button type="submit" class="btn btn--danger" style="padding: 4px 8px; font-size: 12px;">Withdraw</button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <p th:if="${applications.isEmpty()}" class="muted">You have not applied yet. <a th:href="@{/jobs}">Browse jobs</a>.
+        </p>
+    </div>
+    <p style="margin-top:1rem;"><a th:href="@{/student/profile}">Edit profile &amp; resume</a></p>
+</main>
+<footer th:replace="~{fragments :: siteFooter}"></footer>
+</body>
+</html>

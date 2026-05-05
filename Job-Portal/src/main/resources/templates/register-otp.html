@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>Verify OTP — Job Portal</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+</head>
+<body>
+<header th:replace="~{fragments :: siteHeader}"></header>
+<main>
+    <h1>Verify Your Email</h1>
+    <div class="card" style="max-width:32rem; margin: 0 auto;">
+        <p>An OTP has been sent to your email. Please enter it below to complete registration.</p>
+        <form th:action="@{/register/otp}" method="post" autocomplete="off">
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+            <div class="alert alert--error" th:if="${error != null}" th:text="${error}"></div>
+            <div class="form-group">
+                <label for="otp">Enter OTP</label>
+                <input id="otp" name="otp" type="text" required autofocus/>
+            </div>
+            <button class="btn btn--primary" type="submit">Verify & Register</button>
+        </form>
+    </div>
+</main>
+<footer th:replace="~{fragments :: siteFooter}"></footer>
+</body>
+</html>

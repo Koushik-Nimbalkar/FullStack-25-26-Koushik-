@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<body>
+<header class="site-header" th:fragment="siteHeader">
+    <div class="site-header__inner">
+        <a class="brand" th:href="@{/}">Job Portal</a>
+        <nav class="nav">
+            <a th:href="@{/jobs}">Browse jobs</a>
+            <span sec:authorize="!isAuthenticated()">
+                <a th:href="@{/login}">Login</a>
+                <a class="btn btn--primary" th:href="@{/register}">Register</a>
+            </span>
+            <span sec:authorize="hasRole('STUDENT')">
+                <a th:href="@{/student/dashboard}">My dashboard</a>
+                <a th:href="@{/student/applications}">Applications</a>
+            </span>
+            <span sec:authorize="hasAnyRole('EMPLOYER','ADMIN')">
+                <a th:href="@{/employer/dashboard}">Employer</a>
+            </span>
+            <span sec:authorize="hasRole('ADMIN')">
+                <a th:href="@{/admin/dashboard}">Admin</a>
+            </span>
+            <span sec:authorize="isAuthenticated()">
+                <form th:action="@{/logout}" method="post" style="display:inline;">
+                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                    <button type="submit" class="btn btn--ghost" style="cursor:pointer;">Logout</button>
+                </form>
+            </span>
+        </nav>
+    </div>
+</header>
+<footer class="site-footer" th:fragment="siteFooter">
+    All rights are reserved to Koushik 2026
+
+    <!-- Floating Chatbot Widget -->
+    <div id="chatbot-widget" style="position: fixed; bottom: 20px; right: 20px; z-index: 1000; font-family: 'Inter', sans-serif;">
+        <div id="chatbot-window" style="display: none; width: 300px; height: 400px; background: white; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); flex-direction: column; overflow: hidden; margin-bottom: 10px; border: 1px solid rgba(0,0,0,0.1);">
+            <div style="background: linear-gradient(135deg, #2563eb, #1d4ed8); color: white; padding: 12px 15px; font-weight: 600; display: flex; justify-content: space-between; align-items: center;">
+                <span>Support Assistant</span>
+                <button onclick="document.getElementById('chatbot-window').style.display='none'" style="background: none; border: none; color: white; cursor: pointer; font-size: 16px;">&times;</button>
+            </div>
+            <div id="chatbot-messages" style="flex: 1; padding: 15px; overflow-y: auto; background: #f9fafb; display: flex; flex-direction: column; gap: 10px;">
+                <div style="background: #e5e7eb; padding: 8px 12px; border-radius: 12px; align-self: flex-start; max-width: 80%; font-size: 14px; color: #111827;">Hello! How can I help you today?</div>
+            </div>
+            <div style="padding: 10px; background: white; border-top: 1px solid #e5e7eb; display: flex; gap: 8px;">
+                <input type="text" id="chatbot-input" placeholder="Type a message..." style="flex: 1; padding: 8px 12px; border: 1px solid #d1d5db; border-radius: 20px; font-size: 14px; outline: none;" onkeypress="if(event.key === 'Enter') sendChatMessage()">
+                <button onclick="sendChatMessage()" style="background: #2563eb; color: white; border: none; border-radius: 50%; width: 36px; height: 36px; cursor: pointer; display: flex; align-items: center; justify-content: center;">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+                </button>
+            </div>
+        </div>
+        <button onclick="toggleChatbot()" style="background: linear-gradient(135deg, #2563eb, #1d4ed8); color: white; border: none; border-radius: 50%; width: 60px; height: 60px; cursor: pointer; box-shadow: 0 4px 12px rgba(37,99,235,0.4); display: flex; align-items: center; justify-content: center; float: right; transition: transform 0.2s;">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+        </button>
+    </div>
+    
+    <script>
+        function toggleChatbot() {
+            var win = document.getElementById('chatbot-window');
+            win.style.display = win.style.display === 'none' ? 'flex' : 'none';
+        }
+        function sendChatMessage() {
+            var input = document.getElementById('chatbot-input');
+            var msg = input.value.trim();
+            if(!msg) return;
+            var messages = document.getElementById('chatbot-messages');
+            
+            // Add user message
+            var userDiv = document.createElement('div');
+            userDiv.style = "background: #2563eb; color: white; padding: 8px 12px; border-radius: 12px; align-self: flex-end; max-width: 80%; font-size: 14px;";
+            userDiv.innerText = msg;
+            messages.appendChild(userDiv);
+            
+            input.value = '';
+            messages.scrollTop = messages.scrollHeight;
+            
+            // Fake bot reply
+            setTimeout(function() {
+                var botDiv = document.createElement('div');
+                botDiv.style = "background: #e5e7eb; color: #111827; padding: 8px 12px; border-radius: 12px; align-self: flex-start; max-width: 80%; font-size: 14px;";
+                botDiv.innerText = "Thanks for your message! Our human agents will reach out soon.";
+                messages.appendChild(botDiv);
+                messages.scrollTop = messages.scrollHeight;
+            }, 800);
+        }
+    </script>
+</footer>
+</body>
+</html>

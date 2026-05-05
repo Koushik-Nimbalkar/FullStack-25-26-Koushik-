@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>Applicants — Job Portal</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+</head>
+<body>
+<header th:replace="~{fragments :: siteHeader}"></header>
+<main>
+    <h1 th:text="'Applicants — ' + ${job.title}">Applicants</h1>
+    <p class="muted" th:text="${job.location} + ' · ' + ${T(com.jobportal.util.SalaryFormat).formatRange(job.salaryMin, job.salaryMax)}">
+    </p>
+
+    <div class="alert alert--success" th:if="${message != null}" th:text="${message}"></div>
+    <div class="alert alert--error" th:if="${error != null}" th:text="${error}"></div>
+
+    <div class="card" style="overflow-x:auto;">
+        <table th:if="${!applications.isEmpty()}">
+            <thead>
+            <tr>
+                <th>Candidate</th>
+                <th>Email</th>
+                <th>Applied</th>
+                <th>Status</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="a : ${applications}">
+                <td th:text="${a.student.fullName}">Name</td>
+                <td th:text="${a.student.email}">email</td>
+                <td th:text="${T(java.time.format.DateTimeFormatter).ofPattern('dd MMM yyyy').withZone(T(java.time.ZoneId).systemDefault()).format(a.appliedAt)}">
+                    date
+                </td>
+                <td>
+                    <span class="badge"
+                          th:classappend="${a.status.name() == 'PENDING'} ? ' badge--pending' : (${a.status.name() == 'SHORTLISTED'} ? ' badge--shortlist' : ' badge--reject')"
+                          th:text="${a.status.name()}">PENDING</span>
+                </td>
+                <td>
+                    <form th:action="@{/employer/applications/{id}/status(id=${a.id})}" method="post" style="display:inline;">
+                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                        <input type="hidden" name="jobId" th:value="${job.id}"/>
+                        <input type="hidden" name="status" value="SHORTLISTED"/>
+                        <button type="submit" class="btn btn--small btn--primary">Shortlist</button>
+                    </form>
+                    <form th:action="@{/employer/applications/{id}/status(id=${a.id})}" method="post" style="display:inline;">
+                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                        <input type="hidden" name="jobId" th:value="${job.id}"/>
+                        <input type="hidden" name="status" value="REJECTED"/>
+                        <button type="submit" class="btn btn--small btn--ghost">Reject</button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <p th:if="${applications.isEmpty()}" class="muted">No applications yet.</p>
+    </div>
+    <p><a th:href="@{/employer/dashboard}">← Back to dashboard</a></p>
+</main>
+<footer th:replace="~{fragments :: siteFooter}"></footer>
+</body>
+</html>
